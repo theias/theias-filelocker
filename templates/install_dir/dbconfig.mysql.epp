@@ -1,0 +1,9 @@
+<%- |
+    Hash $keyvals,
+| -%>
+--
+-- Update table `config`
+--
+<%- $keyvals.each |$key, $val| { -%>
+UPDATE config SET value='<%= $val %>' WHERE name='<%= $key %>';
+<%- } -%>

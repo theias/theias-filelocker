@@ -1,0 +1,11 @@
+<%- |
+    String $dburi,
+    String $password,
+| -%>
+#!/usr/bin/env python
+from lib.Models import create_admin_user
+
+dburi = '<%= $dburi %>'
+passw = '<%= $password %>'
+
+create_admin_user(dburi, passw)

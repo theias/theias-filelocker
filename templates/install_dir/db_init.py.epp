@@ -1,0 +1,11 @@
+<%- |
+    String $dburi,
+| -%>
+#!/usr/bin/env python
+from lib.Models import create_database_tables
+from lib.Models import drop_database_tables
+
+dburi = '<%= $dburi %>'
+
+# drop_database_tables(dburi)
+create_database_tables(dburi)

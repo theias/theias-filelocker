@@ -1,0 +1,89 @@
+<%- |
+  $tools_sessions_on,
+  $tools_sessions_httponly,
+  $tools_sessions_persistent,
+  $engine_autoreload_on,
+  $tools_sessions_secure,
+  $server_thread_pool,
+  $log_screen,
+  $tools_sessions_name,
+  $server_socket_port,
+  $tools_gzip_on,
+  $log_access_file,
+  $server_reverse_dns,
+  $tools_gzip_mime_types,
+  $tools_sessions_storage_type,
+  $tools_sessions_timeout,
+  $server_environment,
+  $server_socket_timeout,
+  $log_error_file,
+  $server_socket_host,
+  $tools_satransaction_on,
+  $tools_satransaction_echo,
+  $vault,
+  $fqdn,
+  $root_url,
+  $root_path,
+  $cluster_member_id,
+  $tools_staticdir_root,
+  $tools_staticdir_dir,
+  $tools_staticdir_on,
+  $dbtype,
+  $dbuser,
+  $dbhost,
+  $dbname,
+  $dbpassword,
+| -%>
+[global]
+tools.sessions.on=<% if $tools_sessions_on{ %>True<% } else { %>False<% } %>
+tools.sessions.httponly=<% if $tools_sessions_httponly { %>True<% } else { %>False<% } %>
+tools.sessions.persistent=<% if $tools_sessions_persistent { %>True<% } else { %>False<% } %>
+engine.autoreload.on=<% if $engine_autoreload_on { %>True<% } else { %>False<% } %>
+tools.sessions.secure=<% if $tools_sessions_secure { %>True<% } else { %>False<% } %>
+server.thread_pool=<%= $server_thread_pool %>
+log.screen=<% if $log_screen { %>True<% } else { %>False<% } %>
+tools.sessions.name="<%= $tools_sessions_name %>"
+server.socket_port=<%= $server_socket_port %>
+tools.gzip.on=<% if $tools_gzip_on { %>True<% } else { %>False<% } %>
+log.access_file="<%= $log_access_file %>"
+server.reverse_dns=<% if $server_reverse_dns { %>True<% } else { %>False<% } %>
+tools.gzip.mime_types=[<%=
+    $tools_gzip_mime_types.map |$mimetype| {
+        "'${mimetype}'"
+    }.join(', ')
+    -%>]
+tools.sessions.storage_type="<%= $tools_sessions_storage_type %>"
+tools.sessions.timeout=<%= $tools_sessions_timeout %>
+server.environment="<%= $server_environment %>"
+server.socket_timeout=<%= $server_socket_timeout %>
+log.error_file="<%= $log_error_file %>"
+server.socket_host="<%= $server_socket_host %>"
+
+[/]
+tools.SATransaction.on = <% if $tools_satransaction_on  { %>True<% } else { %>False<% } %>
+#It should be noted that with SQLAlchemy v0_5 variants, you'll need to remove the +mysqldb part of the URI below
+tools.SATransaction.dburi = "mysql+mysqldb://<%= $dbuser %>:<%= $dbpassword %>@<%= $dbhost %>/<%= $dbname %>"
+tools.SATransaction.echo = <% if $tools_satransaction_echo  { %>True<% } else { %>False<% } %>
+
+[filelocker]
+vault="<%= $vault %>"
+root_url=<%- if $root_url == undef { -%>
+"<%= $::fqdn %>:<%= $server_socket_port %>"
+<%- } else { -%>
+"<%= $root_url %>"
+<%- } -%>
+root_path="<%= $root_path %>"
+cluster_member_id=<%= $cluster_member_id %>
+
+[/static]
+tools.staticdir.root="<%= $tools_staticdir_root %>"
+tools.staticdir.dir="<%= $tools_staticdir_dir %>"
+tools.staticdir.on=<% if $tools_staticdir_on { %>True<% } else { %>False<% } %>
+
+#This section is necessary if you want to upgrade a legacy (<2_6) database or backup a legacy database
+[database]
+dbtype="<%= $dbtype %>"
+dbuser="<%= $dbuser %>"
+dbhost="<%= $dbhost %>"
+dbname="<%= $dbname %>"
+dbpassword="<%= $dbpassword %>"
